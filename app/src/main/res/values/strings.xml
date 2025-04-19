@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CompiTrackR</string>
+    <string-array name="platforms_array">
+        <item>Codeforces</item>
+        <item>AtCoder</item>
+        <item>LeetCode</item>
+        <item>CodeChef</item>
+    </string-array>
+</resources>

@@ -16,7 +16,7 @@ import java.util.List;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends AppCompatActivity {
+public class ManualEntryActivity extends AppCompatActivity {
 
     // UI components
     private EditText contestNameEditText, rankEditText, oldRatingEditText, newRatingEditText, problemsSolvedEditText;
@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_manual_entry);
 
-        // Match IDs from XML
+        // Match IDs from XML (initialize views first)
         contestNameEditText = findViewById(R.id.editTextContestName);
         rankEditText = findViewById(R.id.editTextRank);
         oldRatingEditText = findViewById(R.id.editTextOldRating);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         platformSpinner = findViewById(R.id.spinnerPlatform);
         saveButton = findViewById(R.id.buttonSave);
 
-        // Setup platform spinner with values
+        // Optional: Setup platform spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.platforms_array,
@@ -59,6 +59,21 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView
         recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
         recyclerViewLogs.setLayoutManager(new LinearLayoutManager(this));
+
+        // After initializing the views, get extras and set values
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            contestNameEditText.setText(extras.getString("contestName", ""));
+            rankEditText.setText(String.valueOf(extras.getInt("rank", 0)));
+            oldRatingEditText.setText(String.valueOf(extras.getInt("oldRating", 0)));
+            newRatingEditText.setText(String.valueOf(extras.getInt("newRating", 0)));
+
+            // Optional: if you added platform
+            String platform = extras.getString("platform", "Codeforces");
+            ArrayAdapter<String> platformAdapter = (ArrayAdapter<String>) platformSpinner.getAdapter();
+            int spinnerPosition = platformAdapter.getPosition(platform);
+            platformSpinner.setSelection(spinnerPosition);
+        }
 
         // Save button action
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     // Save to database
                     databaseHelper.insertContestLog(contestLog);
 
-                    Toast.makeText(MainActivity.this, "Contest log saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ManualEntryActivity.this, "Contest log saved!", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
-                    Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(ManualEntryActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -93,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 List<ContestLog> logs = databaseHelper.getAllContestLogs();
 
                 if (logs.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "No logs found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ManualEntryActivity.this, "No logs found", Toast.LENGTH_SHORT).show();
                 } else {
                     // Set up the adapter to show logs in RecyclerView
                     ContestLogAdapter adapter = new ContestLogAdapter(logs);

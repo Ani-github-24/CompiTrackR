@@ -6,4 +6,10 @@
         <item>LeetCode</item>
         <item>CodeChef</item>
     </string-array>
+    <string name="title_activity_fetch_data">FetchDataActivity</string>
+    <string name="contest_name">Contest Name</string>
+    <string name="rank">Rank</string>
+    <string name="recent_contests">Recent Contests</string>
+    <string name="e_g_codeforces_round_918">e.g. Codeforces Round 918</string>
+    <string name="problems_solved">Problems Solved</string>
 </resources>
